@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>مسار - تتبع النقط</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -26,6 +27,7 @@ body {
   z-index: 10;
 }
 
+/* شعار أعلى الشريط */
 .sidebar .logo {
   width: 54px;
   height: 54px;
@@ -33,59 +35,57 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
-.sidebar .logo img {
-  width: 34px;
-  height: 34px;
+.sidebar .logo .logo-box {
+  width: 36px;
+  height: 36px;
   background: white;
-  border-radius: 6px;
-  padding: 4px;
+  border-radius: 7px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  padding: 6px;
 }
 
-.sidebar .logo-icon {
-  width: 34px;
-  height: 34px;
-  background: white;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  color: #f5a623;
+.sidebar .logo .logo-box span {
+  background: #f5a623;
+  border-radius: 2px;
+  display: block;
 }
 
+/* قائمة الأيقونات */
 .sidebar nav {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 8px 0;
-  gap: 4px;
+  padding: 6px 0;
+  gap: 2px;
   overflow-y: auto;
 }
+.sidebar nav::-webkit-scrollbar { display: none; }
 
 .sidebar nav button {
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
   background: none;
   border: none;
-  color: #fff;
-  font-size: 20px;
+  color: rgba(255,255,255,0.92);
+  font-size: 19px;
   cursor: pointer;
   border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.88;
-  padding: 0;
+  transition: background 0.15s;
 }
-.sidebar nav button svg { display: block; }
+.sidebar nav button:hover  { background: rgba(255,255,255,0.18); color: #fff; }
+.sidebar nav button.active { background: rgba(255,255,255,0.22); color: #fff; }
+.sidebar nav button.dark   { background: #1a1a1a; color: #fff; border-radius: 8px; }
 
-.sidebar nav button:hover { background: rgba(255,255,255,0.2); opacity: 1; }
-.sidebar nav button.active { background: rgba(255,255,255,0.25); opacity: 1; }
-.sidebar nav button.dark { background: #222; opacity: 1; }
-
+/* دائرة المستخدم أسفل الشريط */
 .sidebar .user-btn {
   width: 36px;
   height: 36px;
@@ -99,6 +99,7 @@ body {
   color: #f5a623;
   margin-bottom: 12px;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 /* المحتوى الرئيسي */
@@ -303,25 +304,31 @@ tfoot td { padding: 10px 12px; font-weight: 700; color: #333; }
 
 <!-- الشريط الجانبي -->
 <aside class="sidebar">
+  <!-- شعار: مربعات 4 بيضاء -->
   <div class="logo">
-    <div class="logo-icon"><i class="fas fa-th-large"></i></div>
+    <div class="logo-box">
+      <span></span><span></span>
+      <span></span><span></span>
+    </div>
   </div>
+
   <nav>
-    <button class="active" title="الرئيسية"><i class="fas fa-th-large"></i></button>
-    <button title="الكتب"><i class="fas fa-book-open"></i></button>
-    <button class="dark" title="مسار"><i class="fas fa-asterisk"></i></button>
-    <button title="التلاميذ"><i class="fas fa-users"></i></button>
-    <button title="الغياب"><i class="fas fa-user-slash"></i></button>
-    <button title="الجدول"><i class="fas fa-th"></i></button>
-    <button title="الاستشارة"><i class="fas fa-user-shield"></i></button>
-    <button title="الإحصاء"><i class="fas fa-chart-pie"></i></button>
-    <button title="التوجيه"><i class="fas fa-graduation-cap"></i></button>
-    <button title="الفوج"><i class="fas fa-users"></i></button>
-    <button title="الأساتذة"><i class="fas fa-chalkboard-teacher"></i></button>
-    <button title="الإشعارات"><i class="fas fa-bell"></i></button>
-    <button title="الدعم"><i class="fas fa-hands-helping"></i></button>
-    <button title="المساعدة"><i class="fas fa-headset"></i></button>
+    <button class="active" title="الرئيسية">    <i class="fas fa-th-large"></i></button>
+    <button title="الكتب المدرسية">             <i class="fas fa-book-open"></i></button>
+    <button class="dark" title="مسار">          <i class="fas fa-asterisk"></i></button>
+    <button title="التلاميذ">                   <i class="fas fa-users"></i></button>
+    <button title="الغياب">                     <i class="fas fa-user-slash"></i></button>
+    <button title="الجدول">                     <i class="fas fa-th"></i></button>
+    <button title="الاستشارة">                  <i class="fas fa-user-shield"></i></button>
+    <button title="الإحصاء">                    <i class="fas fa-chart-pie"></i></button>
+    <button title="التوجيه">                    <i class="fas fa-graduation-cap"></i></button>
+    <button title="الفوج">                      <i class="fas fa-users"></i></button>
+    <button title="الأساتذة">                   <i class="fas fa-chalkboard-teacher"></i></button>
+    <button title="الإشعارات">                  <i class="fas fa-bell"></i></button>
+    <button title="الدعم">                      <i class="fas fa-hands-helping"></i></button>
+    <button title="المساعدة">                   <i class="fas fa-headset"></i></button>
   </nav>
+
   <div class="user-btn">YE</div>
 </aside>
 
