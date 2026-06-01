@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>مسار - بوابة التلميذ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body class="font-cairo bg-gray-100 min-h-screen">
+
+  <!-- LOGIN PAGE -->
+  <div id="loginPage" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-500 to-orange-700">
+    <div class="bg-white rounded-2xl shadow-2xl p-10 w-full max-w-md mx-4">
+      <div class="text-center mb-8">
+        <div class="w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-graduation-cap text-white text-3xl"></i>
+        </div>
+        <h1 class="text-3xl font-bold text-gray-800">مـسـار</h1>
+        <p class="text-gray-500 mt-1">بوابة التلميذ الإلكترونية</p>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">رقم التلميذ (MASSAR)</label>
+          <input id="loginUser" type="text" placeholder="أدخل رقم مسار" value="G123456789"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-400 text-right"/>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">كلمة المرور</label>
+          <div class="relative">
+            <input id="loginPass" type="password" placeholder="أدخل كلمة المرور" value="123456"
+              class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-400 text-right pr-4 pl-10"/>
+            <button onclick="togglePass()" class="absolute left-3 top-3.5 text-gray-400 hover:text-gray-600">
+              <i id="eyeIcon" class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+        <div id="loginError" class="hidden text-red-500 text-sm text-center bg-red-50 rounded-lg p-2"></div>
+        <button onclick="doLogin()" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-lg transition-all duration-200 text-lg">
+          <i class="fas fa-sign-in-alt ml-2"></i> تسجيل الدخول
+        </button>
+        <p class="text-center text-sm text-gray-400 mt-2">رقم مسار: G123456789 | كلمة المرور: 123456</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN APP -->
+  <div id="mainApp" class="hidden flex min-h-screen">
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="sidebar bg-orange-600 text-white w-64 min-h-screen flex flex-col fixed right-0 top-0 z-40 transition-transform duration-300">
+      <div class="p-5 border-b border-orange-500">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+            <i class="fas fa-graduation-cap text-orange-600 text-xl"></i>
+          </div>
+          <div>
+            <h2 class="font-bold text-lg leading-tight">مـسـار</h2>
+            <p class="text-orange-200 text-xs">بوابة التلميذ</p>
+          </div>
+        </div>
+      </div>
+      <nav class="flex-1 p-4 space-y-1">
+        <a onclick="showPage('dashboard')" class="nav-item active" id="nav-dashboard">
+          <i class="fas fa-home w-5"></i><span>الرئيسية</span>
+        </a>
+        <a onclick="showPage('grades')" class="nav-item" id="nav-grades">
+          <i class="fas fa-chart-bar w-5"></i><span>النقط والمعدلات</span>
+        </a>
+        <a onclick="showPage('report')" class="nav-item" id="nav-report">
+          <i class="fas fa-file-alt w-5"></i><span>بطاقة التقرير</span>
+        </a>
+        <a onclick="showPage('results')" class="nav-item" id="nav-results">
+          <i class="fas fa-trophy w-5"></i><span>النتائج الدراسية</span>
+        </a>
+        <a onclick="showPage('notifications')" class="nav-item" id="nav-notifications">
+          <i class="fas fa-bell w-5"></i><span>الإشعارات</span>
+          <span class="mr-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+        </a>
+        <a onclick="showPage('profile')" class="nav-item" id="nav-profile">
+          <i class="fas fa-user w-5"></i><span>الملف الشخصي</span>
+        </a>
+        <a onclick="showPage('settings')" class="nav-item" id="nav-settings">
+          <i class="fas fa-cog w-5"></i><span>الإعدادات</span>
+        </a>
+      </nav>
+      <div class="p-4 border-t border-orange-500">
+        <a onclick="doLogout()" class="nav-item hover:bg-red-600">
+          <i class="fas fa-sign-out-alt w-5"></i><span>تسجيل الخروج</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content flex-1 mr-64 min-h-screen bg-gray-100">
+
+      <!-- TOP BAR -->
+      <header class="bg-white shadow-sm px-6 py-4 flex items-center justify-between sticky top-0 z-30">
+        <div class="flex items-center gap-3">
+          <button onclick="toggleSidebar()" class="text-gray-500 hover:text-orange-500 lg:hidden">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+          <h3 id="pageTitle" class="text-lg font-bold text-gray-700">الرئيسية</h3>
+        </div>
+        <div class="flex items-center gap-4">
+          <button onclick="toggleDark()" id="darkBtn" class="text-gray-500 hover:text-orange-500 transition">
+            <i class="fas fa-moon text-xl"></i>
+          </button>
+          <button onclick="showPage('notifications')" class="relative text-gray-500 hover:text-orange-500">
+            <i class="fas fa-bell text-xl"></i>
+            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
+          </button>
+          <div class="flex items-center gap-2 cursor-pointer" onclick="showPage('profile')">
+            <div class="w-9 h-9 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">ي</div>
+            <span class="text-sm font-semibold text-gray-700 hidden sm:block">ياسين المنصوري</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- PAGE: DASHBOARD -->
+      <div id="page-dashboard" class="page-content p-6">
+        <div class="mb-6">
+          <h2 class="text-2xl font-bold text-gray-800">مرحباً، <span class="text-orange-500">ياسين المنصوري</span> 👋</h2>
+          <p class="text-gray-500 mt-1">مرحباً بك في بوابة مسار الإلكترونية</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+          <div class="stat-card bg-white rounded-xl p-5 shadow-sm border-r-4 border-orange-500">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-gray-500 text-sm">السنة الدراسية</p>
+                <p class="text-xl font-bold text-gray-800 mt-1">2025/2026</p>
+              </div>
+              <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                <i class="fas fa-calendar text-orange-500 text-xl"></i>
+              </div>
+            </div>
+          </div>
+          <div class="stat-card bg-white rounded-xl p-5 shadow-sm border-r-4 border-blue-500">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-gray-500 text-sm">الفصل الدراسي</p>
+                <p class="text-xl font-bold text-gray-800 mt-1">الثالثة إعدادي</p>
+              </div>
+              <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <i class="fas fa-school text-blue-500 text-xl"></i>
+              </div>
+            </div>
+          </div>
+          <div class="stat-card bg-white rounded-xl p-5 shadow-sm border-r-4 border-green-500">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-gray-500 text-sm">عدد التلاميذ</p>
+                <p class="text-xl font-bold text-gray-800 mt-1">35 تلميذ</p>
+              </div>
+              <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                <i class="fas fa-users text-green-500 text-xl"></i>
+              </div>
+            </div>
+          </div>
+          <div class="stat-card bg-white rounded-xl p-5 shadow-sm border-r-4 border-purple-500">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-gray-500 text-sm">المعدل العام</p>
+                <p class="text-xl font-bold text-gray-800 mt-1">15.40 / 20</p>
+              </div>
+              <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                <i class="fas fa-star text-purple-500 text-xl"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white rounded-xl shadow-sm p-6">
+            <h3 class="font-bold text-gray-700 mb-4 flex items-center gap-2">
+              <i class="fas fa-info-circle text-orange-500"></i> معلومات التلميذ
+            </h3>
+            <div class="space-y-3">
+              <div class="flex justify-between py-2 border-b border-gray-100">
+                <span class="text-gray-500">الاسم الكامل</span>
+                <span class="font-semibold text-gray-800">ياسين المنصوري</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-100">
+                <span class="text-gray-500">رقم مسار</span>
+                <span class="font-semibold text-gray-800">G123456789</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-100">
+                <span class="text-gray-500">المؤسسة</span>
+                <span class="font-semibold text-gray-800">ثانوية محمد الخامس</span>
+              </div>
+              <div class="flex justify-between py-2 border-b border-gray-100">
+                <span class="text-gray-500">المستوى</span>
+                <span class="font-semibold text-gray-800">الثالثة إعدادي - أ</span>
+              </div>
+              <div class="flex justify-between py-2">
+                <span class="text-gray-500">السنة الدراسية</span>
+                <span class="font-semibold text-gray-800">2025/2026</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-6">
+            <h3 class="font-bold text-gray-700 mb-4 flex items-center gap-2">
+              <i class="fas fa-bell text-orange-500"></i> آخر الإشعارات
+            </h3>
+            <div class="space-y-3">
+              <div class="flex items-start gap-3 p-3 bg-orange-50 rounded-lg">
+                <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <i class="fas fa-star text-white text-xs"></i>
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-800 text-sm">تم نشر نقط الدورة الأولى</p>
+                  <p class="text-gray-500 text-xs mt-1">منذ يومين</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
+                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <i class="fas fa-calendar text-white text-xs"></i>
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-800 text-sm">جدول الامتحانات متاح</p>
+                  <p class="text-gray-500 text-xs mt-1">منذ 5 أيام</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
+                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <i class="fas fa-bullhorn text-white text-xs"></i>
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-800 text-sm">إعلان المؤسسة: عطلة نهاية الأسبوع</p>
+                  <p class="text-gray-500 text-xs mt-1">منذ أسبوع</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE: GRADES -->
+      <div id="page-grades" class="page-content p-6 hidden">
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+          <h2 class="text-2xl font-bold text-gray-800">النقط والمعدلات</h2>
+          <div class="flex flex-wrap gap-3">
+            <select id="yearSelect" onchange="updateGrades()" class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white font-semibold">
+              <option value="2025/2026">2025/2026</option>
+              <option value="2024/2025">2024/2025</option>
+              <option value="2023/2024">2023/2024</option>
+            </select>
+            <select id="sessionSelect" onchange="updateGrades()" class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white font-semibold">
+              <option value="1">الدورة الأولى</option>
+              <option value="2">الدورة الثانية</option>
+            </select>
+            <button onclick="exportPDF()" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-semibold transition flex items-center gap-2">
+              <i class="fas fa-file-pdf"></i> تصدير PDF
+            </button>
+            <button onclick="window.print()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-semibold transition flex items-center gap-2">
+              <i class="fas fa-print"></i> طباعة
+            </button>
+          </div>
+        </div>
+        <div class="mb-4">
+          <input id="searchGrades" oninput="filterGrades()" type="text" placeholder="🔍 ابحث عن مادة..."
+            class="border border-gray-300 rounded-lg px-4 py-2 w-full max-w-sm focus:outline-none focus:ring-2 focus:ring-orange-400"/>
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex gap-2 mb-5 border-b border-gray-200">
+          <button onclick="switchTab('continuous')" id="tab-continuous"
+            class="tab-btn active-tab px-5 py-2 font-semibold rounded-t-lg transition">
+            التقييم المستمر
+          </button>
+          <button onclick="switchTab('report')" id="tab-report"
+            class="tab-btn px-5 py-2 font-semibold rounded-t-lg transition">
+            بطاقة التقرير
+          </button>
+          <button onclick="switchTab('academic')" id="tab-academic"
+            class="tab-btn px-5 py-2 font-semibold rounded-t-lg transition">
+            النتائج الدراسية
+          </button>
+        </div>
+
+        <!-- Tab: Continuous Assessment -->
+        <div id="tabContent-continuous">
+          <div id="loadingGrades" class="hidden text-center py-10">
+            <div class="inline-block w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+            <p class="text-gray-500 mt-3">جاري تحميل النقط...</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead class="bg-orange-500 text-white">
+                  <tr>
+                    <th class="px-4 py-3 text-right">المادة</th>
+                    <th class="px-4 py-3 text-center">الفرض 1</th>
+                    <th class="px-4 py-3 text-center">الفرض 2</th>
+                    <th class="px-4 py-3 text-center">الفرض 3</th>
+                    <th class="px-4 py-3 text-center">الفرض 4</th>
+                    <th class="px-4 py-3 text-center">الأنشطة المندمجة</th>
+                    <th class="px-4 py-3 text-center">المعدل</th>
+                  </tr>
+                </thead>
+                <tbody id="gradesTableBody" class="divide-y divide-gray-100">
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: Report Card -->
+        <div id="tabContent-report" class="hidden">
+          <div class="bg-white rounded-xl shadow-sm p-6">
+            <h3 class="font-bold text-gray-700 mb-5 text-lg flex items-center gap-2">
+              <i class="fas fa-file-alt text-orange-500"></i> بطاقة التقرير
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <div class="bg-orange-50 rounded-xl p-4 text-center">
+                <p class="text-gray-500 text-sm mb-1">المعدل</p>
+                <p id="rc-avg" class="text-3xl font-bold text-orange-600">15.40</p>
+                <p class="text-gray-400 text-xs">/ 20</p>
+              </div>
+              <div class="bg-blue-50 rounded-xl p-4 text-center">
+                <p class="text-gray-500 text-sm mb-1">الرتبة</p>
+                <p id="rc-rank" class="text-3xl font-bold text-blue-600">3</p>
+                <p class="text-gray-400 text-xs">من 35</p>
+              </div>
+              <div class="bg-green-50 rounded-xl p-4 text-center">
+                <p class="text-gray-500 text-sm mb-1">أعلى نقطة</p>
+                <p id="rc-high" class="text-3xl font-bold text-green-600">18</p>
+                <p class="text-gray-400 text-xs">/ 20</p>
+              </div>
+              <div class="bg-red-50 rounded-xl p-4 text-center">
+                <p class="text-gray-500 text-sm mb-1">أدنى نقطة</p>
+                <p id="rc-low" class="text-3xl font-bold text-red-500">12</p>
+                <p class="text-gray-400 text-xs">/ 20</p>
+              </div>
+            </div>
+            <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+              <p class="font-semibold text-gray-700 mb-1"><i class="fas fa-comment text-yellow-500 ml-2"></i>ملاحظة الأستاذ:</p>
+              <p id="rc-remark" class="text-gray-600 italic">"تلميذ متميز، يُبدي جدية واجتهاداً ملحوظاً في جميع المواد. يُنصح بمواصلة هذا المستوى."</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: Academic Results -->
+        <div id="tabContent-academic" class="hidden">
+          <div class="bg-white rounded-xl shadow-sm p-6">
+            <h3 class="font-bold text-gray-700 mb-5 text-lg flex items-center gap-2">
+              <i class="fas fa-trophy text-orange-500"></i> النتائج الدراسية
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+              <div class="bg-orange-50 rounded-xl p-5 text-center">
+                <p class="text-gray-500 text-sm mb-1">معدل الدورة</p>
+                <p id="ar-sem" class="text-3xl font-bold text-orange-600">15.40</p>
+              </div>
+              <div class="bg-purple-50 rounded-xl p-5 text-center">
+                <p class="text-gray-500 text-sm mb-1">المعدل السنوي</p>
+                <p id="ar-annual" class="text-3xl font-bold text-purple-600">15.75</p>
+              </div>
+              <div class="bg-green-50 rounded-xl p-5 text-center">
+                <p class="text-gray-500 text-sm mb-1">القرار</p>
+                <p id="ar-status" class="text-2xl font-bold text-green-600">ناجح ✓</p>
+              </div>
+            </div>
+            <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-center">
+              <p class="text-gray-500 text-sm mb-1">الملاحظة التقديرية</p>
+              <p id="ar-mention" class="text-2xl font-bold text-yellow-600">مشرف جداً 🏆</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE: REPORT -->
+      <div id="page-report" class="page-content p-6 hidden">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">بطاقة التقرير</h2>
+        <div class="bg-white rounded-xl shadow-sm p-6 max-w-2xl">
+          <div class="flex items-center justify-between mb-6 pb-4 border-b">
+            <div>
+              <h3 class="text-xl font-bold text-gray-800">ياسين المنصوري</h3>
+              <p class="text-gray-500">الثالثة إعدادي - أ | ثانوية محمد الخامس</p>
+            </div>
+            <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">ي</div>
+          </div>
+          <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="bg-orange-50 rounded-xl p-4 text-center">
+              <p class="text-gray-500 text-sm">المعدل العام</p>
+              <p class="text-3xl font-bold text-orange-600 mt-1">15.40</p>
+            </div>
+            <div class="bg-blue-50 rounded-xl p-4 text-center">
+              <p class="text-gray-500 text-sm">الرتبة</p>
+              <p class="text-3xl font-bold text-blue-600 mt-1">3 / 35</p>
+            </div>
+            <div class="bg-green-50 rounded-xl p-4 text-center">
+              <p class="text-gray-500 text-sm">أعلى نقطة</p>
+              <p class="text-3xl font-bold text-green-600 mt-1">18 / 20</p>
+            </div>
+            <div class="bg-red-50 rounded-xl p-4 text-center">
+              <p class="text-gray-500 text-sm">أدنى نقطة</p>
+              <p class="text-3xl font-bold text-red-500 mt-1">12 / 20</p>
+            </div>
+          </div>
+          <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-4">
+            <p class="font-semibold text-gray-700 mb-2"><i class="fas fa-comment text-yellow-500 ml-2"></i>ملاحظة الأستاذ:</p>
+            <p class="text-gray-600 italic">"تلميذ متميز، يُبدي جدية واجتهاداً ملحوظاً في جميع المواد. يُنصح بمواصلة هذا المستوى."</p>
+          </div>
+          <button onclick="window.print()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-bold transition flex items-center justify-center gap-2">
+            <i class="fas fa-print"></i> طباعة بطاقة التقرير
+          </button>
+        </div>
+      </div>
+
+      <!-- PAGE: RESULTS -->
+      <div id="page-results" class="page-content p-6 hidden">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">النتائج الدراسية</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-6">
+          <div class="bg-white rounded-xl shadow-sm p-6 text-center border-t-4 border-orange-500">
+            <i class="fas fa-chart-line text-orange-500 text-3xl mb-3"></i>
+            <p class="text-gray-500 text-sm">معدل الدورة الأولى</p>
+            <p class="text-4xl font-bold text-orange-600 mt-2">15.40</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-6 text-center border-t-4 border-purple-500">
+            <i class="fas fa-chart-bar text-purple-500 text-3xl mb-3"></i>
+            <p class="text-gray-500 text-sm">معدل الدورة الثانية</p>
+            <p class="text-4xl font-bold text-purple-600 mt-2">16.10</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-6 text-center border-t-4 border-blue-500">
+            <i class="fas fa-star text-blue-500 text-3xl mb-3"></i>
+            <p class="text-gray-500 text-sm">المعدل السنوي</p>
+            <p class="text-4xl font-bold text-blue-600 mt-2">15.75</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div class="bg-white rounded-xl shadow-sm p-6 text-center border-t-4 border-green-500">
+            <i class="fas fa-check-circle text-green-500 text-4xl mb-3"></i>
+            <p class="text-gray-500 text-sm">القرار</p>
+            <p class="text-3xl font-bold text-green-600 mt-2">ناجح ✓</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-6 text-center border-t-4 border-yellow-500">
+            <i class="fas fa-trophy text-yellow-500 text-4xl mb-3"></i>
+            <p class="text-gray-500 text-sm">الملاحظة التقديرية</p>
+            <p class="text-3xl font-bold text-yellow-600 mt-2">مشرف جداً 🏆</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE: NOTIFICATIONS -->
+      <div id="page-notifications" class="page-content p-6 hidden">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">الإشعارات</h2>
+        <div class="space-y-4 max-w-2xl">
+          <div class="bg-white rounded-xl shadow-sm p-5 flex items-start gap-4 border-r-4 border-orange-500">
+            <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-star text-orange-500"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start">
+                <p class="font-bold text-gray-800">تم نشر نقط الدورة الأولى</p>
+                <span class="bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">جديد</span>
+              </div>
+              <p class="text-gray-500 text-sm mt-1">يمكنك الاطلاع على نقطك في قسم النقط والمعدلات</p>
+              <p class="text-gray-400 text-xs mt-2"><i class="fas fa-clock ml-1"></i>منذ يومين</p>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-5 flex items-start gap-4 border-r-4 border-blue-500">
+            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-calendar text-blue-500"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start">
+                <p class="font-bold text-gray-800">جدول الامتحانات متاح</p>
+                <span class="bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">جديد</span>
+              </div>
+              <p class="text-gray-500 text-sm mt-1">تم نشر جدول امتحانات الدورة الثانية</p>
+              <p class="text-gray-400 text-xs mt-2"><i class="fas fa-clock ml-1"></i>منذ 5 أيام</p>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-5 flex items-start gap-4 border-r-4 border-green-500">
+            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-bullhorn text-green-500"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start">
+                <p class="font-bold text-gray-800">إعلان المؤسسة</p>
+                <span class="bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">جديد</span>
+              </div>
+              <p class="text-gray-500 text-sm mt-1">عطلة نهاية الأسبوع ستكون ممتدة بسبب الاحتفالات الوطنية</p>
+              <p class="text-gray-400 text-xs mt-2"><i class="fas fa-clock ml-1"></i>منذ أسبوع</p>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-5 flex items-start gap-4 border-r-4 border-gray-300 opacity-70">
+            <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-info text-gray-400"></i>
+            </div>
+            <div class="flex-1">
+              <p class="font-bold text-gray-700">تحديث بيانات التلميذ</p>
+              <p class="text-gray-500 text-sm mt-1">تم تحديث معلوماتك الشخصية بنجاح</p>
+              <p class="text-gray-400 text-xs mt-2"><i class="fas fa-clock ml-1"></i>منذ شهر</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE: PROFILE -->
+      <div id="page-profile" class="page-content p-6 hidden">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">الملف الشخصي</h2>
+        <div class="bg-white rounded-xl shadow-sm p-6 max-w-2xl">
+          <div class="flex flex-col sm:flex-row items-center gap-6 mb-8 pb-6 border-b">
+            <div class="w-24 h-24 bg-orange-500 rounded-full flex items-center justify-center text-white text-4xl font-bold">ي</div>
+            <div class="text-center sm:text-right">
+              <h3 class="text-2xl font-bold text-gray-800">ياسين المنصوري</h3>
+              <p class="text-gray-500">G123456789</p>
+              <span class="inline-block bg-green-100 text-green-700 text-sm px-3 py-1 rounded-full mt-2">تلميذ نشط</span>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="bg-gray-50 rounded-lg p-4">
+                <p class="text-gray-400 text-xs mb-1">الاسم الكامل</p>
+                <p class="font-semibold text-gray-800">ياسين المنصوري</p>
+              </div>
+              <div class="bg-gray-50 rounded-lg p-4">
+                <p class="text-gray-400 text-xs mb-1">رقم مسار</p>
+                <p class="font-semibold text-gray-800">G123456789</p>
+              </div>
+              <div class="bg-gray-50 rounded-lg p-4">
+                <p class="text-gray-400 text-xs mb-1">المؤسسة</p>
+                <p class="font-semibold text-gray-800">ثانوية محمد الخامس</p>
+              </div>
+              <div class="bg-gray-50 rounded-lg p-4">
+                <p class="text-gray-400 text-xs mb-1">المستوى الدراسي</p>
+                <p class="font-semibold text-gray-800">الثالثة إعدادي - أ</p>
+              </div>
+              <div class="bg-gray-50 rounded-lg p-4">
+                <p class="text-gray-400 text-xs mb-1">السنة الدراسية</p>
+                <p class="font-semibold text-gray-800">2025/2026</p>
+              </div>
+              <div class="bg-gray-50 rounded-lg p-4">
+                <p class="text-gray-400 text-xs mb-1">عدد التلاميذ في القسم</p>
+                <p class="font-semibold text-gray-800">35 تلميذ</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE: SETTINGS -->
+      <div id="page-settings" class="page-content p-6 hidden">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">الإعدادات</h2>
+        <div class="bg-white rounded-xl shadow-sm p-6 max-w-lg space-y-5">
+          <div class="flex items-center justify-between py-3 border-b">
+            <div>
+              <p class="font-semibold text-gray-800">الوضع الليلي</p>
+              <p class="text-gray-400 text-sm">تفعيل المظهر الداكن</p>
+            </div>
+            <button onclick="toggleDark()" id="darkToggle" class="w-12 h-6 bg-gray-300 rounded-full relative transition-colors duration-200">
+              <span id="darkDot" class="absolute top-1 right-1 w-4 h-4 bg-white rounded-full transition-transform duration-200"></span>
+            </button>
+          </div>
+          <div class="flex items-center justify-between py-3 border-b">
+            <div>
+              <p class="font-semibold text-gray-800">الإشعارات</p>
+              <p class="text-gray-400 text-sm">تلقي إشعارات النقط والإعلانات</p>
+            </div>
+            <button class="w-12 h-6 bg-orange-500 rounded-full relative">
+              <span class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full"></span>
+            </button>
+          </div>
+          <div class="flex items-center justify-between py-3">
+            <div>
+              <p class="font-semibold text-gray-800">اللغة</p>
+              <p class="text-gray-400 text-sm">لغة الواجهة</p>
+            </div>
+            <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400">
+              <option>العربية</option>
+              <option>Français</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+
+* { box-sizing: border-box; }
+
+body { font-family: 'Cairo', sans-serif; }
+
+/* NAV ITEMS */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+  color: rgba(255,255,255,0.85);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+.nav-item:hover { background: rgba(255,255,255,0.15); color: #fff; }
+.nav-item.active { background: rgba(255,255,255,0.25); color: #fff; }
+
+/* TABS */
+.tab-btn {
+  color: #6b7280;
+  border-bottom: 3px solid transparent;
+  padding-bottom: 10px;
+  font-size: 0.95rem;
+}
+.tab-btn:hover { color: #f97316; }
+.active-tab { color: #f97316; border-bottom: 3px solid #f97316; }
+
+/* GRADE COLORS */
+.grade-excellent { color: #16a34a; font-weight: 700; }
+.grade-good      { color: #2563eb; font-weight: 700; }
+.grade-average   { color: #d97706; font-weight: 700; }
+.grade-fail      { color: #dc2626; font-weight: 700; }
+
+/* STAT CARD HOVER */
+.stat-card { transition: transform 0.2s, box-shadow 0.2s; }
+.stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+
+/* SIDEBAR */
+.sidebar { transition: transform 0.3s ease; }
+
+/* MAIN CONTENT */
+.main-content { transition: margin 0.3s ease; }
+
+/* DARK MODE */
+body.dark { background: #111827; color: #f9fafb; }
+body.dark .bg-white { background: #1f2937 !important; }
+body.dark .bg-gray-100 { background: #111827 !important; }
+body.dark .bg-gray-50 { background: #374151 !important; }
+body.dark .text-gray-800 { color: #f9fafb !important; }
+body.dark .text-gray-700 { color: #e5e7eb !important; }
+body.dark .text-gray-600 { color: #d1d5db !important; }
+body.dark .text-gray-500 { color: #9ca3af !important; }
+body.dark .border-gray-100 { border-color: #374151 !important; }
+body.dark .border-gray-200 { border-color: #374151 !important; }
+body.dark .border-gray-300 { border-color: #4b5563 !important; }
+body.dark select, body.dark input { background: #374151 !important; color: #f9fafb !important; border-color: #4b5563 !important; }
+body.dark header { background: #1f2937 !important; }
+body.dark .shadow-sm { box-shadow: 0 1px 3px rgba(0,0,0,0.4) !important; }
+
+/* PRINT */
+@media print {
+  .sidebar, header, button, select, input { display: none !important; }
+  .main-content { margin: 0 !important; }
+  body { background: white !important; }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main-content { margin-right: 0 !important; }
+}
+
+/* ANIMATIONS */
+.page-content { animation: fadeIn 0.3s ease; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* TABLE ROW HOVER */
+tbody tr:hover { background: #fff7ed; }
+body.dark tbody tr:hover { background: #374151 !important; }
