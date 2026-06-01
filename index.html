@@ -4,250 +4,611 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>مسار - تتبع النقط</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Cairo',sans-serif;background:#f5f5f5;color:#333;direction:rtl;min-height:100vh}
-.layout{display:flex;flex-direction:row-reverse;min-height:100vh}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* SIDEBAR */
-.icon-sidebar{width:56px;background:#f5a623;display:flex;flex-direction:column;align-items:center;position:fixed;right:0;top:0;bottom:0;z-index:100}
-.sidebar-top{width:100%;background:#e8941a;padding:10px 0;display:flex;justify-content:center}
-.massar-logo{width:40px;height:40px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#f5a623;font-size:1.1rem}
-.icon-nav{flex:1;display:flex;flex-direction:column;align-items:center;padding:6px 0;gap:2px;overflow-y:auto}
-.icon-nav::-webkit-scrollbar{display:none}
-.icon-btn{width:44px;height:44px;background:none;border:none;color:rgba(255,255,255,0.9);font-size:1rem;cursor:pointer;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:background .15s}
-.icon-btn:hover{background:rgba(255,255,255,0.2)}
-.icon-btn.active{background:rgba(255,255,255,0.25)}
-.icon-btn.star{background:#222;color:#fff}
-.sidebar-bottom{padding:12px 0;display:flex;justify-content:center}
-.user-circle{width:36px;height:36px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:700;color:#f5a623;cursor:pointer}
+body {
+  font-family: 'Cairo', sans-serif;
+  background: #f0f0f0;
+  direction: rtl;
+}
 
-/* MAIN */
-.main-content{flex:1;margin-right:56px;padding:20px 28px 40px;background:#f5f5f5;min-height:100vh}
-.breadcrumb{font-size:0.82rem;color:#888;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.bc-link{color:#888;cursor:pointer}
-.bc-sep{color:#bbb}
-.bc-active{color:#555;font-weight:600}
-.greeting{font-size:1.5rem;font-weight:700;color:#333;text-align:left;margin-bottom:20px;direction:ltr}
+/* الشريط الجانبي الأيمن */
+.sidebar {
+  position: fixed;
+  right: 0; top: 0; bottom: 0;
+  width: 54px;
+  background: #f5a623;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+}
 
-/* CARD */
-.card{background:#fff;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:20px;overflow:hidden}
-.card-header{background:#ebebeb;padding:10px 18px;font-size:1rem;font-weight:700;color:#444;text-align:right;border-bottom:1px solid #ddd}
+.sidebar .logo {
+  width: 54px;
+  height: 54px;
+  background: #e8941a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-/* FILTERS */
-.filters-row{display:flex;align-items:flex-end;gap:16px;padding:16px 18px;flex-direction:row-reverse;flex-wrap:wrap}
-.filter-group{display:flex;flex-direction:column;gap:4px;min-width:180px}
-.filter-group label{font-size:0.82rem;color:#666;text-align:right}
-.sel-wrap{position:relative;display:flex;align-items:center}
-.sel-wrap select{width:100%;padding:7px 12px 7px 28px;border:1px solid #ccc;border-radius:4px;font-family:'Cairo',sans-serif;font-size:0.88rem;color:#444;background:#fff;appearance:none;cursor:pointer;outline:none;text-align:right;direction:rtl}
-.sel-wrap select:focus{border-color:#f5a623}
-.sel-arrow{position:absolute;left:8px;color:#888;font-size:0.7rem;pointer-events:none}
-.search-btn{background:#4a90d9;color:#fff;border:none;border-radius:4px;width:38px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.9rem;transition:background .15s;flex-shrink:0}
-.search-btn:hover{background:#357abd}
+.sidebar .logo img {
+  width: 34px;
+  height: 34px;
+  background: white;
+  border-radius: 6px;
+  padding: 4px;
+}
 
-/* META */
-.meta-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;padding:14px 18px;gap:8px;border-bottom:1px solid #eee}
-.meta-item{display:flex;flex-direction:column;gap:2px}
-.meta-label{font-size:0.78rem;color:#888;font-weight:500}
-.meta-label.bold{color:#f5a623;font-weight:700;font-size:0.85rem}
-.meta-val{font-size:0.88rem;color:#333;font-weight:600}
+.sidebar .logo-icon {
+  width: 34px;
+  height: 34px;
+  background: white;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #f5a623;
+  font-weight: 900;
+}
 
-/* TABS */
-.tabs-row{display:flex;flex-direction:row-reverse;padding:12px 18px 0;border-bottom:2px solid #eee}
-.tab-btn{background:#f0f0f0;border:1px solid #ddd;border-bottom:none;padding:8px 18px;font-family:'Cairo',sans-serif;font-size:0.85rem;font-weight:600;color:#555;cursor:pointer;border-radius:4px 4px 0 0;margin-left:4px;transition:background .15s}
-.tab-btn:hover{background:#e5e5e5}
-.tab-btn.active{background:#fff;color:#333;border-color:#ddd;border-bottom:2px solid #fff;margin-bottom:-2px;position:relative;z-index:1}
+.sidebar nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 0;
+  gap: 4px;
+  overflow-y: auto;
+}
 
-/* TABLE */
-.grades-table{width:100%;border-collapse:collapse;font-size:0.88rem;direction:rtl}
-.grades-table thead tr{background:#f7f7f7;border-bottom:1px solid #e0e0e0}
-.grades-table th{padding:10px 14px;text-align:center;font-weight:600;color:#555;font-size:0.82rem;border-left:1px solid #eee}
-.grades-table th:last-child{border-left:none}
-.grades-table th.sub{text-align:right}
-.grades-table tbody tr{border-bottom:1px solid #f0f0f0;transition:background .1s}
-.grades-table tbody tr:hover{background:#fafafa}
-.grades-table td{padding:10px 14px;text-align:center;color:#444;border-left:1px solid #f0f0f0}
-.grades-table td:last-child{border-left:none}
-.grades-table td.sub{text-align:right;font-weight:500;color:#333}
-.grades-table tfoot tr{background:#f7f7f7;border-top:2px solid #e0e0e0}
-.grades-table tfoot td{padding:10px 14px;font-weight:700;color:#333}
-.avg-val{color:#f5a623;font-size:1rem;font-weight:700}
+.sidebar nav button {
+  width: 42px;
+  height: 42px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.85;
+}
 
-/* LOADING */
-.loading-wrap{display:flex;justify-content:center;padding:40px}
-.spinner{width:36px;height:36px;border:3px solid #f5a623;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.hidden{display:none!important}
+.sidebar nav button:hover { background: rgba(255,255,255,0.2); opacity: 1; }
+.sidebar nav button.active { background: rgba(255,255,255,0.25); opacity: 1; }
+.sidebar nav button.dark { background: #222; opacity: 1; }
 
-/* RESPONSIVE */
-@media(max-width:768px){
-  .meta-grid{grid-template-columns:1fr 1fr}
-  .main-content{padding:14px}
-  .filters-row{flex-direction:column;align-items:stretch}
-  .filter-group{min-width:unset}
+.sidebar .user-btn {
+  width: 36px;
+  height: 36px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #f5a623;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+/* المحتوى الرئيسي */
+.main {
+  margin-right: 54px;
+  padding: 20px 24px;
+  min-height: 100vh;
+}
+
+/* breadcrumb */
+.breadcrumb {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 8px;
+}
+.breadcrumb span { color: #555; font-weight: 600; }
+
+/* الترحيب */
+.greeting {
+  font-size: 22px;
+  font-weight: 700;
+  color: #333;
+  text-align: left;
+  margin-bottom: 18px;
+}
+
+/* البطاقة */
+.card {
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.card-title {
+  background: #ebebeb;
+  padding: 10px 16px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #444;
+  border-bottom: 1px solid #ddd;
+  text-align: right;
+}
+
+/* الفلاتر */
+.filters {
+  padding: 14px 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-direction: row-reverse;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filter-item label {
+  font-size: 12px;
+  color: #777;
+  text-align: right;
+}
+
+.filter-item select {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px;
+  color: #444;
+  background: white;
+  min-width: 160px;
+  cursor: pointer;
+  outline: none;
+  direction: rtl;
+}
+
+.filter-item select:focus { border-color: #f5a623; }
+
+.search-btn {
+  background: #4a90d9;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  width: 36px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* معلومات المؤسسة */
+.school-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  padding: 12px 16px;
+  gap: 6px;
+  border-bottom: 1px solid #eee;
+}
+
+.info-item { display: flex; flex-direction: column; gap: 2px; }
+.info-label { font-size: 12px; color: #999; }
+.info-label.orange { color: #f5a623; font-weight: 700; font-size: 13px; }
+.info-value { font-size: 13px; font-weight: 600; color: #333; }
+
+/* التبويبات */
+.tabs {
+  display: flex;
+  flex-direction: row-reverse;
+  padding: 10px 16px 0;
+  border-bottom: 2px solid #e5e5e5;
+  gap: 4px;
+}
+
+.tab {
+  padding: 7px 16px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+}
+
+.tab.active {
+  background: white;
+  color: #333;
+  border-bottom: 2px solid white;
+  margin-bottom: -2px;
+  position: relative;
+  z-index: 1;
+}
+
+/* الجدول */
+.table-wrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  direction: rtl;
+}
+
+thead tr { background: #f7f7f7; border-bottom: 1px solid #e0e0e0; }
+
+th {
+  padding: 10px 12px;
+  text-align: center;
+  font-weight: 600;
+  color: #555;
+  font-size: 12px;
+  border-left: 1px solid #eee;
+}
+th:last-child { border-left: none; }
+th.right { text-align: right; }
+
+tbody tr { border-bottom: 1px solid #f0f0f0; }
+tbody tr:hover { background: #fafafa; }
+
+td {
+  padding: 10px 12px;
+  text-align: center;
+  color: #444;
+  border-left: 1px solid #f0f0f0;
+}
+td:last-child { border-left: none; }
+td.right { text-align: right; font-weight: 500; color: #333; }
+
+tfoot tr { background: #f7f7f7; border-top: 2px solid #e0e0e0; }
+tfoot td { padding: 10px 12px; font-weight: 700; color: #333; }
+.avg { color: #f5a623; font-size: 15px; }
+
+/* loading */
+.loading { text-align: center; padding: 30px; color: #aaa; }
+.spinner {
+  display: inline-block;
+  width: 32px; height: 32px;
+  border: 3px solid #f5a623;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.hidden { display: none !important; }
+
+@media (max-width: 600px) {
+  .school-info { grid-template-columns: 1fr 1fr; }
+  .filters { flex-direction: column; align-items: stretch; }
+  .filter-item select { min-width: unset; width: 100%; }
 }
 </style>
 </head>
 <body>
-<div class="layout">
 
-  <!-- SIDEBAR -->
-  <aside class="icon-sidebar">
-    <div class="sidebar-top">
-      <div class="massar-logo"><i class="fas fa-users"></i></div>
-    </div>
-    <nav class="icon-nav">
-      <button class="icon-btn active"><i class="fas fa-th-large"></i></button>
-      <button class="icon-btn"><i class="fas fa-book-open"></i></button>
-      <button class="icon-btn star"><i class="fas fa-asterisk"></i></button>
-      <button class="icon-btn"><i class="fas fa-users"></i></button>
-      <button class="icon-btn"><i class="fas fa-user-times"></i></button>
-      <button class="icon-btn"><i class="fas fa-users-cog"></i></button>
-      <button class="icon-btn"><i class="fas fa-user-shield"></i></button>
-      <button class="icon-btn"><i class="fas fa-chart-pie"></i></button>
-      <button class="icon-btn"><i class="fas fa-graduation-cap"></i></button>
-      <button class="icon-btn"><i class="fas fa-chalkboard-teacher"></i></button>
-      <button class="icon-btn"><i class="fas fa-users"></i></button>
-      <button class="icon-btn"><i class="fas fa-bell"></i></button>
-      <button class="icon-btn"><i class="fas fa-hands-helping"></i></button>
-      <button class="icon-btn"><i class="fas fa-headset"></i></button>
-    </nav>
-    <div class="sidebar-bottom">
-      <div class="user-circle">YE</div>
-    </div>
-  </aside>
+<!-- الشريط الجانبي -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">&#9733;</div>
+  </div>
+  <nav>
+    <button class="active">&#9632;</button>
+    <button>&#128218;</button>
+    <button class="dark">&#10033;</button>
+    <button>&#128101;</button>
+    <button>&#128683;</button>
+    <button>&#9881;</button>
+    <button>&#128737;</button>
+    <button>&#128202;</button>
+    <button>&#127891;</button>
+    <button>&#128101;</button>
+    <button>&#128101;</button>
+    <button>&#128276;</button>
+    <button>&#129309;</button>
+    <button>&#127911;</button>
+  </nav>
+  <div class="user-btn">YE</div>
+</aside>
 
-  <!-- MAIN -->
-  <main class="main-content">
-    <div class="breadcrumb">
-      <span class="bc-link">الفرنسية</span>
-      <span class="bc-sep">›</span>
-      <span class="bc-active">العربية</span>
-    </div>
+<!-- المحتوى -->
+<main class="main">
 
-    <h1 class="greeting">مرحبا ياسين النفوح،</h1>
+  <div class="breadcrumb">الفرنسية › <span>العربية</span></div>
+  <div class="greeting">مرحبا ياسين النفوح،</div>
 
-    <!-- تتبع النقط -->
-    <div class="card">
-      <div class="card-header">تتبع النقط</div>
-      <div class="filters-row">
-        <div class="filter-group">
-          <label>السنة الدراسية</label>
-          <div class="sel-wrap">
-            <select id="yearSelect" onchange="loadData()">
-              <option value="2025/2026">2025/2026</option>
-              <option value="2024/2025">2024/2025</option>
-              <option value="2023/2024">2023/2024</option>
-            </select>
-            <i class="fas fa-chevron-down sel-arrow"></i>
-          </div>
-        </div>
-        <div class="filter-group">
-          <label>الدورة</label>
-          <div class="sel-wrap">
-            <select id="sessionSelect" onchange="loadData()">
-              <option value="1">الدورة الأولى</option>
-              <option value="2">الدورة الثانية</option>
-            </select>
-            <i class="fas fa-chevron-down sel-arrow"></i>
-          </div>
-        </div>
-        <button class="search-btn" onclick="loadData()"><i class="fas fa-search"></i></button>
+  <!-- تتبع النقط -->
+  <div class="card">
+    <div class="card-title">تتبع النقط</div>
+    <div class="filters">
+      <div class="filter-item">
+        <label>السنة الدراسية</label>
+        <select id="yearSel" onchange="load()">
+          <option value="2025/2026">2025/2026</option>
+          <option value="2024/2025">2024/2025</option>
+          <option value="2023/2024">2023/2024</option>
+        </select>
       </div>
+      <div class="filter-item">
+        <label>الدورة</label>
+        <select id="sessSel" onchange="load()">
+          <option value="1">الدورة الأولى</option>
+          <option value="2">الدورة الثانية</option>
+        </select>
+      </div>
+      <button class="search-btn" onclick="load()">&#128269;</button>
+    </div>
+  </div>
+
+  <!-- بيان النتائج -->
+  <div class="card">
+    <div class="card-title">بيان النتائج الدراسية</div>
+
+    <div class="school-info">
+      <div class="info-item">
+        <span class="info-label">المؤسسة</span>
+        <span class="info-value">الثانوية التأهيلية عبد المومن الموحدي</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label orange">المستوى</span>
+        <span class="info-value">الأولى باكالوريا العلوم التجريبية</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Classe</span>
+        <span class="info-value">1BACSE-1</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label orange">عدد التلاميذ</span>
+        <span class="info-value">33</span>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" id="tab-c" onclick="switchTab('c')">نقط المراقبة المستمرة</button>
+      <button class="tab" id="tab-r" onclick="switchTab('r')">بيان النتائج الدراسية</button>
+      <button class="tab" id="tab-s" onclick="switchTab('s')">بيان النتائج الدراسية</button>
+    </div>
+
+    <div id="spinner" class="loading hidden"><div class="spinner"></div></div>
+
+    <!-- نقط المراقبة المستمرة -->
+    <div id="pane-c" class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="right">المادة</th>
+            <th>الفرض الأول</th>
+            <th>الفرض الثاني</th>
+            <th>الفرض الثالث</th>
+            <th>الفرض الرابع</th>
+            <th>الأنشطة المندمجة</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-c"></tbody>
+      </table>
     </div>
 
     <!-- بيان النتائج -->
-    <div class="card">
-      <div class="card-header">بيان النتائج الدراسية</div>
-
-      <div class="meta-grid">
-        <div class="meta-item">
-          <span class="meta-label">المؤسسة</span>
-          <span class="meta-val">الثانوية التأهيلية عبد المومن الموحدي</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label bold">المستوى</span>
-          <span class="meta-val">الأولى باكالوريا العلوم التجريبية</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">Classe</span>
-          <span class="meta-val">1BACSE-1</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label bold">عدد التلاميذ</span>
-          <span class="meta-val">33</span>
-        </div>
-      </div>
-
-      <div class="tabs-row">
-        <button class="tab-btn active" id="tab-continuous" onclick="switchTab('continuous')">نقط المراقبة المستمرة</button>
-        <button class="tab-btn" id="tab-report" onclick="switchTab('report')">بيان النتائج الدراسية</button>
-        <button class="tab-btn" id="tab-summary" onclick="switchTab('summary')">بيان النتائج الدراسية</button>
-      </div>
-
-      <div id="loadingSpinner" class="loading-wrap hidden">
-        <div class="spinner"></div>
-      </div>
-
-      <!-- نقط المراقبة المستمرة -->
-      <div id="content-continuous">
-        <table class="grades-table">
-          <thead>
-            <tr>
-              <th class="sub">المادة</th>
-              <th>الفرض الأول</th>
-              <th>الفرض الثاني</th>
-              <th>الفرض الثالث</th>
-              <th>الفرض الرابع</th>
-              <th>الأنشطة المندمجة</th>
-            </tr>
-          </thead>
-          <tbody id="continuousBody"></tbody>
-        </table>
-      </div>
-
-      <!-- بيان النتائج -->
-      <div id="content-report" class="hidden">
-        <table class="grades-table">
-          <thead>
-            <tr>
-              <th class="sub">المادة</th>
-              <th>المعامل</th>
-              <th>نقط المراقبة المستمرة</th>
-              <th>أعلى نقطة</th>
-              <th>معدل القسم</th>
-              <th>أقل نقطة</th>
-              <th>نقط الامتحان</th>
-            </tr>
-          </thead>
-          <tbody id="reportBody"></tbody>
-          <tfoot id="reportFoot"></tfoot>
-        </table>
-      </div>
-
-      <!-- ملخص -->
-      <div id="content-summary" class="hidden">
-        <table class="grades-table">
-          <thead>
-            <tr>
-              <th class="sub">المادة</th>
-              <th>المعامل</th>
-              <th>نقط المراقبة المستمرة</th>
-              <th>أعلى نقطة</th>
-              <th>معدل القسم</th>
-              <th>أقل نقطة</th>
-              <th>نقط الامتحان</th>
-            </tr>
-          </thead>
-          <tbody id="summaryBody"></tbody>
-        </table>
-      </div>
-
+    <div id="pane-r" class="table-wrap hidden">
+      <table>
+        <thead>
+          <tr>
+            <th class="right">المادة</th>
+            <th>المعامل</th>
+            <th>نقط المراقبة المستمرة</th>
+            <th>أعلى نقطة</th>
+            <th>معدل القسم</th>
+            <th>أقل نقطة</th>
+            <th>نقط الامتحان</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-r"></tbody>
+        <tfoot id="tfoot-r"></tfoot>
+      </table>
     </div>
-  </main>
-</div>
-<script src="app.js"></script>
+
+    <!-- ملخص -->
+    <div id="pane-s" class="table-wrap hidden">
+      <table>
+        <thead>
+          <tr>
+            <th class="right">المادة</th>
+            <th>المعامل</th>
+            <th>نقط المراقبة المستمرة</th>
+            <th>أعلى نقطة</th>
+            <th>معدل القسم</th>
+            <th>أقل نقطة</th>
+            <th>نقط الامتحان</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-s"></tbody>
+      </table>
+    </div>
+
+  </div>
+</main>
+
+<script>
+// ── البيانات ──────────────────────────────────────
+var DATA = {
+  "2025/2026": {
+    1: [
+      {s:"المواظبة و السلوك", c:1,  f1:10.75, f2:"",   f3:"",    f4:"",  ai:""},
+      {s:"الاجتماعيات",       c:2,  f1:13.5,  f2:8,    f3:"",    f4:12,  ai:""},
+      {s:"التربية الإسلامية", c:2,  f1:11,    f2:12,   f3:"",    f4:11,  ai:""},
+      {s:"التربية البدنية",   c:1,  f1:15.5,  f2:16,   f3:16.25, f4:"",  ai:""},
+      {s:"الرياضيات",         c:7,  f1:3,     f2:5.5,  f3:10.5,  f4:"",  ai:""},
+      {s:"الفلسفة",           c:2,  f1:9,     f2:9,    f3:"",    f4:14,  ai:""},
+      {s:"الفيزياء والكيمياء",c:7,  f1:2.25,  f2:5,    f3:5.75,  f4:10,  ai:""},
+      {s:"اللغة الإنجليزية", c:2,  f1:4.25,  f2:9.5,  f3:"",    f4:11,  ai:""},
+      {s:"اللغة العربية",     c:2,  f1:9.25,  f2:10.5, f3:"",    f4:8,   ai:""},
+      {s:"اللغة الفرنسية",    c:4,  f1:1,     f2:6,    f3:1.5,   f4:14,  ai:5},
+      {s:"علوم الحياة والأرض",c:7,  f1:4.25,  f2:2.25, f3:4,     f4:14,  ai:""},
+    ],
+    2: [
+      {s:"المواظبة و السلوك", c:1,  f1:"",    f2:"",   f3:"",    f4:"",  ai:""},
+      {s:"الاجتماعيات",       c:2,  f1:11.5,  f2:"",   f3:"",    f4:"",  ai:""},
+      {s:"التربية الإسلامية", c:2,  f1:"",    f2:"",   f3:"",    f4:"",  ai:""},
+      {s:"التربية البدنية",   c:1,  f1:0,     f2:0,    f3:"",    f4:0,   ai:""},
+      {s:"الرياضيات",         c:7,  f1:"",    f2:"",   f3:"",    f4:"",  ai:""},
+      {s:"الفلسفة",           c:2,  f1:8.5,   f2:"",   f3:"",    f4:15,  ai:""},
+      {s:"الفيزياء والكيمياء",c:7,  f1:"",    f2:"",   f3:"",    f4:"",  ai:""},
+      {s:"اللغة الإنجليزية", c:2,  f1:"",    f2:"",   f3:"",    f4:"",  ai:""},
+      {s:"اللغة العربية",     c:2,  f1:"",    f2:"",   f3:"",    f4:"",  ai:""},
+      {s:"اللغة الفرنسية",    c:4,  f1:"",    f2:"",   f3:"",    f4:"",  ai:""},
+      {s:"علوم الحياة والأرض",c:7,  f1:13.5,  f2:"",   f3:"",    f4:"",  ai:""},
+    ]
+  },
+  "2024/2025": {
+    1: [
+      {s:"المواظبة و السلوك", c:1,  f1:10.75, f2:"",f3:"",f4:"",ai:""},
+      {s:"الاجتماعيات",       c:2,  f1:11.06, f2:"",f3:"",f4:"",ai:""},
+      {s:"التربية الإسلامية", c:2,  f1:11.38, f2:"",f3:"",f4:"",ai:""},
+      {s:"التربية البدنية",   c:1,  f1:15.92, f2:"",f3:"",f4:"",ai:""},
+      {s:"الرياضيات",         c:7,  f1:6.33,  f2:"",f3:"",f4:"",ai:""},
+      {s:"الفلسفة",           c:2,  f1:10.25, f2:"",f3:"",f4:"",ai:""},
+      {s:"الفيزياء والكيمياء",c:7,  f1:5.75,  f2:"",f3:"",f4:"",ai:""},
+      {s:"اللغة الإنجليزية", c:2,  f1:8.52,  f2:"",f3:"",f4:"",ai:""},
+      {s:"اللغة العربية",     c:2,  f1:9.41,  f2:"",f3:"",f4:"",ai:""},
+      {s:"اللغة الفرنسية",    c:4,  f1:5.5,   f2:"",f3:"",f4:"",ai:""},
+      {s:"علوم الحياة والأرض",c:7,  f1:6.12,  f2:"",f3:"",f4:"",ai:""},
+    ],
+    2: [
+      {s:"المواظبة و السلوك", c:1,  f1:12,f2:"",f3:"",f4:"",ai:""},
+      {s:"الاجتماعيات",       c:2,  f1:13,f2:"",f3:"",f4:"",ai:""},
+      {s:"التربية الإسلامية", c:2,  f1:14,f2:"",f3:"",f4:"",ai:""},
+      {s:"التربية البدنية",   c:1,  f1:16,f2:"",f3:"",f4:"",ai:""},
+      {s:"الرياضيات",         c:7,  f1:7, f2:"",f3:"",f4:"",ai:""},
+      {s:"الفلسفة",           c:2,  f1:11,f2:"",f3:"",f4:"",ai:""},
+      {s:"الفيزياء والكيمياء",c:7,  f1:6.5,f2:"",f3:"",f4:"",ai:""},
+      {s:"اللغة الإنجليزية", c:2,  f1:9, f2:"",f3:"",f4:"",ai:""},
+      {s:"اللغة العربية",     c:2,  f1:10,f2:"",f3:"",f4:"",ai:""},
+      {s:"اللغة الفرنسية",    c:4,  f1:6, f2:"",f3:"",f4:"",ai:""},
+      {s:"علوم الحياة والأرض",c:7,  f1:7, f2:"",f3:"",f4:"",ai:""},
+    ]
+  },
+  "2023/2024": {
+    1: [
+      {s:"المواظبة و السلوك", c:1,  f1:14,f2:"",f3:"",f4:"",ai:""},
+      {s:"الاجتماعيات",       c:2,  f1:12,f2:"",f3:"",f4:"",ai:""},
+      {s:"التربية الإسلامية", c:2,  f1:13,f2:"",f3:"",f4:"",ai:""},
+      {s:"التربية البدنية",   c:1,  f1:17,f2:"",f3:"",f4:"",ai:""},
+      {s:"الرياضيات",         c:7,  f1:8, f2:"",f3:"",f4:"",ai:""},
+      {s:"الفلسفة",           c:2,  f1:12,f2:"",f3:"",f4:"",ai:""},
+      {s:"الفيزياء والكيمياء",c:7,  f1:7, f2:"",f3:"",f4:"",ai:""},
+      {s:"اللغة الإنجليزية", c:2,  f1:10,f2:"",f3:"",f4:"",ai:""},
+      {s:"اللغة العربية",     c:2,  f1:11,f2:"",f3:"",f4:"",ai:""},
+      {s:"اللغة الفرنسية",    c:4,  f1:7, f2:"",f3:"",f4:"",ai:""},
+      {s:"علوم الحياة والأرض",c:7,  f1:8, f2:"",f3:"",f4:"",ai:""},
+    ],
+    2: [
+      {s:"المواظبة و السلوك", c:1,  f1:15,f2:"",f3:"",f4:"",ai:""},
+      {s:"الاجتماعيات",       c:2,  f1:13,f2:"",f3:"",f4:"",ai:""},
+      {s:"التربية الإسلامية", c:2,  f1:14,f2:"",f3:"",f4:"",ai:""},
+      {s:"التربية البدنية",   c:1,  f1:18,f2:"",f3:"",f4:"",ai:""},
+      {s:"الرياضيات",         c:7,  f1:9, f2:"",f3:"",f4:"",ai:""},
+      {s:"الفلسفة",           c:2,  f1:13,f2:"",f3:"",f4:"",ai:""},
+      {s:"الفيزياء والكيمياء",c:7,  f1:8, f2:"",f3:"",f4:"",ai:""},
+      {s:"اللغة الإنجليزية", c:2,  f1:11,f2:"",f3:"",f4:"",ai:""},
+      {s:"اللغة العربية",     c:2,  f1:12,f2:"",f3:"",f4:"",ai:""},
+      {s:"اللغة الفرنسية",    c:4,  f1:8, f2:"",f3:"",f4:"",ai:""},
+      {s:"علوم الحياة والأرض",c:7,  f1:9, f2:"",f3:"",f4:"",ai:""},
+    ]
+  }
+};
+
+// ── التبويبات ─────────────────────────────────────
+function switchTab(name) {
+  ['c','r','s'].forEach(function(t) {
+    document.getElementById('pane-'+t).classList.add('hidden');
+    document.getElementById('tab-'+t).classList.remove('active');
+  });
+  document.getElementById('pane-'+name).classList.remove('hidden');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+// ── حساب المعدل ───────────────────────────────────
+function avg(row) {
+  var vals = [row.f1,row.f2,row.f3,row.f4,row.ai].filter(function(v){ return v !== "" && v !== null; });
+  if (!vals.length) return "";
+  var sum = vals.reduce(function(a,b){ return a + Number(b); }, 0);
+  return (sum / vals.length).toFixed(2);
+}
+
+// ── تحميل البيانات ────────────────────────────────
+function load() {
+  var year = document.getElementById('yearSel').value;
+  var sess = parseInt(document.getElementById('sessSel').value);
+  var rows = (DATA[year] && DATA[year][sess]) ? DATA[year][sess] : [];
+
+  var sp = document.getElementById('spinner');
+  sp.classList.remove('hidden');
+  ['pane-c','pane-r','pane-s'].forEach(function(id){ document.getElementById(id).classList.add('hidden'); });
+
+  setTimeout(function() {
+    sp.classList.add('hidden');
+
+    // نقط المراقبة المستمرة
+    var bc = document.getElementById('tbody-c');
+    bc.innerHTML = '';
+    rows.forEach(function(r) {
+      bc.innerHTML += '<tr>' +
+        '<td class="right">'+r.s+'</td>' +
+        '<td>'+r.f1+'</td>' +
+        '<td>'+r.f2+'</td>' +
+        '<td>'+r.f3+'</td>' +
+        '<td>'+r.f4+'</td>' +
+        '<td>'+r.ai+'</td>' +
+      '</tr>';
+    });
+
+    // بيان النتائج
+    var br = document.getElementById('tbody-r');
+    var fr = document.getElementById('tfoot-r');
+    br.innerHTML = '';
+    var totalC = 0, totalW = 0;
+    rows.forEach(function(r) {
+      var a = avg(r);
+      br.innerHTML += '<tr>' +
+        '<td class="right">'+r.s+'</td>' +
+        '<td>'+r.c+'</td>' +
+        '<td>'+a+'</td>' +
+        '<td></td><td></td><td></td><td></td>' +
+      '</tr>';
+      if (a !== "") { totalC += r.c; totalW += Number(a) * r.c; }
+    });
+    var sessionAvg = totalC > 0 ? (totalW / totalC).toFixed(2) : "—";
+    fr.innerHTML =
+      '<tr><td class="right">معدل الدورة</td><td></td><td class="avg">'+sessionAvg+'</td><td colspan="4"></td></tr>' +
+      '<tr><td class="right">معدل الإمتحان</td><td colspan="6"></td></tr>';
+
+    // ملخص
+    var bs = document.getElementById('tbody-s');
+    bs.innerHTML = br.innerHTML;
+
+    // إظهار التبويب النشط
+    var active = document.querySelector('.tab.active');
+    var name = active ? active.id.replace('tab-','') : 'c';
+    document.getElementById('pane-'+name).classList.remove('hidden');
+
+  }, 350);
+}
+
+// تحميل عند فتح الصفحة
+load();
+</script>
 </body>
 </html>
