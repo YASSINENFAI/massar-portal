@@ -85,33 +85,12 @@ const GRADES_DATA = {
 };
 
 // ---------- AUTH ----------
-function doLogin() {
-  document.getElementById('loginPage').style.display = 'none';
-  document.getElementById('mainApp').classList.add('visible');
-  updateGrades();
-}
-
-function doLogout() {
-  document.getElementById('mainApp').classList.remove('visible');
-  document.getElementById('loginPage').style.display = 'flex';
-}
-
-function togglePass() {
-  const inp  = document.getElementById('loginPass');
-  const icon = document.getElementById('eyeIcon');
-  if (inp.type === 'password') {
-    inp.type = 'text';
-    icon.className = 'fas fa-eye-slash';
-  } else {
-    inp.type = 'password';
-    icon.className = 'fas fa-eye';
-  }
-}
+function doLogin() {}
+function doLogout() {}
+function togglePass() {}
 
 // Allow Enter key on login
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter') doLogin();
-});
+document.addEventListener('keydown', e => {});
 
 // ---------- NAVIGATION ----------
 const PAGE_TITLES = {
@@ -125,19 +104,13 @@ const PAGE_TITLES = {
 };
 
 function showPage(name) {
-  // Hide all pages
-  document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
-  // Remove active from all nav items
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  // Show target page
   const page = document.getElementById('page-' + name);
-  if (page) page.classList.remove('hidden');
-  // Activate nav item
+  if (page) page.classList.add('active-page');
   const nav = document.getElementById('nav-' + name);
   if (nav) nav.classList.add('active');
-  // Update title
   document.getElementById('pageTitle').textContent = PAGE_TITLES[name] || '';
-  // Close sidebar on mobile
   document.getElementById('sidebar').classList.remove('open');
 }
 
@@ -258,12 +231,12 @@ let darkMode = false;
 function toggleDark() {
   darkMode = !darkMode;
   document.body.classList.toggle('dark', darkMode);
-  const btn  = document.getElementById('darkBtn');
-  const tog  = document.getElementById('darkToggle');
-  const dot  = document.getElementById('darkDot');
-  if (btn)  btn.innerHTML  = darkMode ? '<i class="fas fa-sun text-xl text-yellow-400"></i>' : '<i class="fas fa-moon text-xl"></i>';
-  if (tog)  tog.style.background = darkMode ? '#f97316' : '#d1d5db';
-  if (dot)  dot.style.transform  = darkMode ? 'translateX(-24px)' : 'translateX(0)';
+  const btn = document.getElementById('darkBtn');
+  const tog = document.getElementById('darkToggle');
+  const dot = document.getElementById('darkDot');
+  if (btn) btn.innerHTML = darkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+  if (tog) tog.classList.toggle('on', darkMode);
+  if (dot) dot.classList.toggle('on-dot', darkMode);
 }
 
 // ---------- EXPORT PDF ----------
@@ -271,3 +244,8 @@ function exportPDF() {
   alert('لتصدير PDF، استخدم زر الطباعة واختر "حفظ كـ PDF" من إعدادات الطابعة.');
   window.print();
 }
+
+// ---------- INIT ----------
+document.addEventListener('DOMContentLoaded', () => {
+  updateGrades();
+});
