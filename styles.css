@@ -4,6 +4,10 @@
 
 body { font-family: 'Cairo', sans-serif; }
 
+/* APP LAYOUT */
+#mainApp { display: none; }
+#mainApp.visible { display: flex !important; }
+
 /* NAV ITEMS */
 .nav-item {
   display: flex;

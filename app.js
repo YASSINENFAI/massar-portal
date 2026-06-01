@@ -92,8 +92,7 @@ function doLogin() {
   if (user === 'G123456789' && pass === '123456') {
     err.classList.add('hidden');
     document.getElementById('loginPage').style.display = 'none';
-    const app = document.getElementById('mainApp');
-    app.style.display = 'flex';
+    document.getElementById('mainApp').classList.add('visible');
     updateGrades();
   } else {
     err.textContent = 'رقم مسار أو كلمة المرور غير صحيحة';
@@ -102,7 +101,7 @@ function doLogin() {
 }
 
 function doLogout() {
-  document.getElementById('mainApp').style.display = 'none';
+  document.getElementById('mainApp').classList.remove('visible');
   document.getElementById('loginPage').style.display = 'flex';
 }
 
@@ -120,7 +119,7 @@ function togglePass() {
 
 // Allow Enter key on login
 document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !document.getElementById('loginPage').classList.contains('hidden')) {
+  if (e.key === 'Enter' && document.getElementById('mainApp').style.display === 'none') {
     doLogin();
   }
 });
