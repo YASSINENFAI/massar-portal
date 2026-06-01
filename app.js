@@ -86,18 +86,9 @@ const GRADES_DATA = {
 
 // ---------- AUTH ----------
 function doLogin() {
-  const user = document.getElementById('loginUser').value.trim();
-  const pass = document.getElementById('loginPass').value.trim();
-  const err  = document.getElementById('loginError');
-  if (user === 'G123456789' && pass === '123456') {
-    err.classList.add('hidden');
-    document.getElementById('loginPage').style.display = 'none';
-    document.getElementById('mainApp').classList.add('visible');
-    updateGrades();
-  } else {
-    err.textContent = 'رقم مسار أو كلمة المرور غير صحيحة';
-    err.classList.remove('hidden');
-  }
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('mainApp').classList.add('visible');
+  updateGrades();
 }
 
 function doLogout() {
@@ -119,9 +110,7 @@ function togglePass() {
 
 // Allow Enter key on login
 document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.getElementById('mainApp').style.display === 'none') {
-    doLogin();
-  }
+  if (e.key === 'Enter') doLogin();
 });
 
 // ---------- NAVIGATION ----------
