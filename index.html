@@ -1,66 +1,141 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>مسار - تتبع النقط</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="styles.css"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>مسار - تتبع النقط</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Cairo',sans-serif;background:#f5f5f5;color:#333;direction:rtl;min-height:100vh}
+.layout{display:flex;flex-direction:row-reverse;min-height:100vh}
+
+/* SIDEBAR */
+.icon-sidebar{width:56px;background:#f5a623;display:flex;flex-direction:column;align-items:center;position:fixed;right:0;top:0;bottom:0;z-index:100}
+.sidebar-top{width:100%;background:#e8941a;padding:10px 0;display:flex;justify-content:center}
+.massar-logo{width:40px;height:40px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#f5a623;font-size:1.1rem}
+.icon-nav{flex:1;display:flex;flex-direction:column;align-items:center;padding:6px 0;gap:2px;overflow-y:auto}
+.icon-nav::-webkit-scrollbar{display:none}
+.icon-btn{width:44px;height:44px;background:none;border:none;color:rgba(255,255,255,0.9);font-size:1rem;cursor:pointer;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.icon-btn:hover{background:rgba(255,255,255,0.2)}
+.icon-btn.active{background:rgba(255,255,255,0.25)}
+.icon-btn.star{background:#222;color:#fff}
+.sidebar-bottom{padding:12px 0;display:flex;justify-content:center}
+.user-circle{width:36px;height:36px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:700;color:#f5a623;cursor:pointer}
+
+/* MAIN */
+.main-content{flex:1;margin-right:56px;padding:20px 28px 40px;background:#f5f5f5;min-height:100vh}
+.breadcrumb{font-size:0.82rem;color:#888;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.bc-link{color:#888;cursor:pointer}
+.bc-sep{color:#bbb}
+.bc-active{color:#555;font-weight:600}
+.greeting{font-size:1.5rem;font-weight:700;color:#333;text-align:left;margin-bottom:20px;direction:ltr}
+
+/* CARD */
+.card{background:#fff;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:20px;overflow:hidden}
+.card-header{background:#ebebeb;padding:10px 18px;font-size:1rem;font-weight:700;color:#444;text-align:right;border-bottom:1px solid #ddd}
+
+/* FILTERS */
+.filters-row{display:flex;align-items:flex-end;gap:16px;padding:16px 18px;flex-direction:row-reverse;flex-wrap:wrap}
+.filter-group{display:flex;flex-direction:column;gap:4px;min-width:180px}
+.filter-group label{font-size:0.82rem;color:#666;text-align:right}
+.sel-wrap{position:relative;display:flex;align-items:center}
+.sel-wrap select{width:100%;padding:7px 12px 7px 28px;border:1px solid #ccc;border-radius:4px;font-family:'Cairo',sans-serif;font-size:0.88rem;color:#444;background:#fff;appearance:none;cursor:pointer;outline:none;text-align:right;direction:rtl}
+.sel-wrap select:focus{border-color:#f5a623}
+.sel-arrow{position:absolute;left:8px;color:#888;font-size:0.7rem;pointer-events:none}
+.search-btn{background:#4a90d9;color:#fff;border:none;border-radius:4px;width:38px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.9rem;transition:background .15s;flex-shrink:0}
+.search-btn:hover{background:#357abd}
+
+/* META */
+.meta-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;padding:14px 18px;gap:8px;border-bottom:1px solid #eee}
+.meta-item{display:flex;flex-direction:column;gap:2px}
+.meta-label{font-size:0.78rem;color:#888;font-weight:500}
+.meta-label.bold{color:#f5a623;font-weight:700;font-size:0.85rem}
+.meta-val{font-size:0.88rem;color:#333;font-weight:600}
+
+/* TABS */
+.tabs-row{display:flex;flex-direction:row-reverse;padding:12px 18px 0;border-bottom:2px solid #eee}
+.tab-btn{background:#f0f0f0;border:1px solid #ddd;border-bottom:none;padding:8px 18px;font-family:'Cairo',sans-serif;font-size:0.85rem;font-weight:600;color:#555;cursor:pointer;border-radius:4px 4px 0 0;margin-left:4px;transition:background .15s}
+.tab-btn:hover{background:#e5e5e5}
+.tab-btn.active{background:#fff;color:#333;border-color:#ddd;border-bottom:2px solid #fff;margin-bottom:-2px;position:relative;z-index:1}
+
+/* TABLE */
+.grades-table{width:100%;border-collapse:collapse;font-size:0.88rem;direction:rtl}
+.grades-table thead tr{background:#f7f7f7;border-bottom:1px solid #e0e0e0}
+.grades-table th{padding:10px 14px;text-align:center;font-weight:600;color:#555;font-size:0.82rem;border-left:1px solid #eee}
+.grades-table th:last-child{border-left:none}
+.grades-table th.sub{text-align:right}
+.grades-table tbody tr{border-bottom:1px solid #f0f0f0;transition:background .1s}
+.grades-table tbody tr:hover{background:#fafafa}
+.grades-table td{padding:10px 14px;text-align:center;color:#444;border-left:1px solid #f0f0f0}
+.grades-table td:last-child{border-left:none}
+.grades-table td.sub{text-align:right;font-weight:500;color:#333}
+.grades-table tfoot tr{background:#f7f7f7;border-top:2px solid #e0e0e0}
+.grades-table tfoot td{padding:10px 14px;font-weight:700;color:#333}
+.avg-val{color:#f5a623;font-size:1rem;font-weight:700}
+
+/* LOADING */
+.loading-wrap{display:flex;justify-content:center;padding:40px}
+.spinner{width:36px;height:36px;border:3px solid #f5a623;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hidden{display:none!important}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .meta-grid{grid-template-columns:1fr 1fr}
+  .main-content{padding:14px}
+  .filters-row{flex-direction:column;align-items:stretch}
+  .filter-group{min-width:unset}
+}
+</style>
 </head>
 <body>
-
 <div class="layout">
 
-  <!-- ═══ RIGHT ICON SIDEBAR ═══ -->
+  <!-- SIDEBAR -->
   <aside class="icon-sidebar">
     <div class="sidebar-top">
-      <div class="massar-logo">
-        <i class="fas fa-users"></i>
-      </div>
+      <div class="massar-logo"><i class="fas fa-users"></i></div>
     </div>
     <nav class="icon-nav">
-      <button class="icon-btn active" title="الرئيسية"><i class="fas fa-th-large"></i></button>
-      <button class="icon-btn" title="الكتب"><i class="fas fa-book-open"></i></button>
-      <button class="icon-btn active-star" title="مسار"><i class="fas fa-asterisk"></i></button>
-      <button class="icon-btn" title="التلاميذ"><i class="fas fa-users"></i></button>
-      <button class="icon-btn" title="الغياب"><i class="fas fa-user-times"></i></button>
-      <button class="icon-btn" title="الجدول"><i class="fas fa-users-cog"></i></button>
-      <button class="icon-btn" title="الاستشارة"><i class="fas fa-user-shield"></i></button>
-      <button class="icon-btn" title="الإحصاء"><i class="fas fa-chart-pie"></i></button>
-      <button class="icon-btn" title="التوجيه"><i class="fas fa-graduation-cap"></i></button>
-      <button class="icon-btn" title="الفوج"><i class="fas fa-users"></i></button>
-      <button class="icon-btn" title="الأساتذة"><i class="fas fa-chalkboard-teacher"></i></button>
-      <button class="icon-btn" title="الإشعارات"><i class="fas fa-bell"></i></button>
-      <button class="icon-btn" title="الدعم"><i class="fas fa-hands-helping"></i></button>
-      <button class="icon-btn" title="المساعدة"><i class="fas fa-headset"></i></button>
+      <button class="icon-btn active"><i class="fas fa-th-large"></i></button>
+      <button class="icon-btn"><i class="fas fa-book-open"></i></button>
+      <button class="icon-btn star"><i class="fas fa-asterisk"></i></button>
+      <button class="icon-btn"><i class="fas fa-users"></i></button>
+      <button class="icon-btn"><i class="fas fa-user-times"></i></button>
+      <button class="icon-btn"><i class="fas fa-users-cog"></i></button>
+      <button class="icon-btn"><i class="fas fa-user-shield"></i></button>
+      <button class="icon-btn"><i class="fas fa-chart-pie"></i></button>
+      <button class="icon-btn"><i class="fas fa-graduation-cap"></i></button>
+      <button class="icon-btn"><i class="fas fa-chalkboard-teacher"></i></button>
+      <button class="icon-btn"><i class="fas fa-users"></i></button>
+      <button class="icon-btn"><i class="fas fa-bell"></i></button>
+      <button class="icon-btn"><i class="fas fa-hands-helping"></i></button>
+      <button class="icon-btn"><i class="fas fa-headset"></i></button>
     </nav>
     <div class="sidebar-bottom">
       <div class="user-circle">YE</div>
     </div>
   </aside>
 
-  <!-- ═══ MAIN CONTENT ═══ -->
+  <!-- MAIN -->
   <main class="main-content">
-
-    <!-- breadcrumb -->
     <div class="breadcrumb">
       <span class="bc-link">الفرنسية</span>
       <span class="bc-sep">›</span>
       <span class="bc-active">العربية</span>
     </div>
 
-    <!-- greeting -->
     <h1 class="greeting">مرحبا ياسين النفوح،</h1>
 
-    <!-- ═══ CARD: تتبع النقط ═══ -->
-    <div class="section-card">
-      <div class="section-header">تتبع النقط</div>
-
+    <!-- تتبع النقط -->
+    <div class="card">
+      <div class="card-header">تتبع النقط</div>
       <div class="filters-row">
         <div class="filter-group">
           <label>السنة الدراسية</label>
-          <div class="select-wrap">
+          <div class="sel-wrap">
             <select id="yearSelect" onchange="loadData()">
               <option value="2025/2026">2025/2026</option>
               <option value="2024/2025">2024/2025</option>
@@ -71,7 +146,7 @@
         </div>
         <div class="filter-group">
           <label>الدورة</label>
-          <div class="select-wrap">
+          <div class="sel-wrap">
             <select id="sessionSelect" onchange="loadData()">
               <option value="1">الدورة الأولى</option>
               <option value="2">الدورة الثانية</option>
@@ -79,15 +154,13 @@
             <i class="fas fa-chevron-down sel-arrow"></i>
           </div>
         </div>
-        <button class="search-btn" onclick="loadData()">
-          <i class="fas fa-search"></i>
-        </button>
+        <button class="search-btn" onclick="loadData()"><i class="fas fa-search"></i></button>
       </div>
     </div>
 
-    <!-- ═══ CARD: بيان النتائج ═══ -->
-    <div class="section-card" id="resultsCard">
-      <div class="section-header">بيان النتائج الدراسية</div>
+    <!-- بيان النتائج -->
+    <div class="card">
+      <div class="card-header">بيان النتائج الدراسية</div>
 
       <div class="meta-grid">
         <div class="meta-item">
@@ -108,24 +181,22 @@
         </div>
       </div>
 
-      <!-- TABS -->
       <div class="tabs-row">
-        <button class="tab-btn active-tab" id="tab-continuous" onclick="switchTab('continuous')">نقط المراقبة المستمرة</button>
+        <button class="tab-btn active" id="tab-continuous" onclick="switchTab('continuous')">نقط المراقبة المستمرة</button>
         <button class="tab-btn" id="tab-report" onclick="switchTab('report')">بيان النتائج الدراسية</button>
         <button class="tab-btn" id="tab-summary" onclick="switchTab('summary')">بيان النتائج الدراسية</button>
       </div>
 
-      <!-- loading -->
       <div id="loadingSpinner" class="loading-wrap hidden">
         <div class="spinner"></div>
       </div>
 
-      <!-- TAB: نقط المراقبة المستمرة -->
+      <!-- نقط المراقبة المستمرة -->
       <div id="content-continuous">
-        <table class="grades-table" id="continuousTable">
+        <table class="grades-table">
           <thead>
             <tr>
-              <th class="col-subject">المادة</th>
+              <th class="sub">المادة</th>
               <th>الفرض الأول</th>
               <th>الفرض الثاني</th>
               <th>الفرض الثالث</th>
@@ -137,12 +208,12 @@
         </table>
       </div>
 
-      <!-- TAB: بيان النتائج -->
+      <!-- بيان النتائج -->
       <div id="content-report" class="hidden">
-        <table class="grades-table" id="reportTable">
+        <table class="grades-table">
           <thead>
             <tr>
-              <th class="col-subject">المادة</th>
+              <th class="sub">المادة</th>
               <th>المعامل</th>
               <th>نقط المراقبة المستمرة</th>
               <th>أعلى نقطة</th>
@@ -156,12 +227,12 @@
         </table>
       </div>
 
-      <!-- TAB: ملخص -->
+      <!-- ملخص -->
       <div id="content-summary" class="hidden">
         <table class="grades-table">
           <thead>
             <tr>
-              <th class="col-subject">المادة</th>
+              <th class="sub">المادة</th>
               <th>المعامل</th>
               <th>نقط المراقبة المستمرة</th>
               <th>أعلى نقطة</th>
@@ -174,11 +245,9 @@
         </table>
       </div>
 
-    </div><!-- end resultsCard -->
-
+    </div>
   </main>
 </div>
-
 <script src="app.js"></script>
 </body>
 </html>
